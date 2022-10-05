@@ -23,6 +23,16 @@ CRGB leds[NUM_LEDS];
 
 int redFlashTimer;
 
+void lowBattery(void)
+{
+    for (uint16_t i = 0; i < NUM_LEDS; i++) {
+        leds[i] = 0;
+        leds[i].red = 1;
+    }
+    FastLED.show();
+    while(1);
+}
+
 void pacificaSetup()
 {
     //delay( 3000); // 3 second delay for boot recovery, and a moment of silence

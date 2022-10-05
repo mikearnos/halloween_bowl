@@ -8,8 +8,9 @@ const float R1 = 99400;
 const float R2 = 5520;
 const float Vref = 1.135; // fine tune the so 7.2 battery voltage matches
 
-#define BATTERY_MAX 3.10
-#define BATTERY_MIN 2.50
+#define BATTERY_MAX 8.4
+//#define BATTERY_MIN 6.0
+#define BATTERY_MIN 7.0
 
 bool nonBlockDelay(unsigned long* last, unsigned int delay);
 float voltageMeasurement(void);
@@ -23,8 +24,6 @@ void setup()
     analogReference(INTERNAL); // 1.1 volts
     Serial.begin(115200);
     pacificaSetup();
-
-    //int battery = analogRead(BATTIN);
 }
 
 unsigned long lastBlink = 0;
@@ -32,13 +31,25 @@ unsigned long lastBatt = 0;
 void loop()
 {
     static int beamCount;
+    static int lowBatteryCount;
     int mode = GREEN;
     //if (nonBlockDelay(&lastBlink, 5000)) {
     //mode = REDFLASH;
     //}
 
     if (nonBlockDelay(&lastBatt, 1000)) {
-        voltageMeasurement();
+        float batteryVoltage = voltageMeasurement();
+        //Serial.println(batteryVoltage);
+
+        if (batteryVoltage < BATTERY_MIN) {
+            lowBatteryCount++;
+            Serial.print(batteryVoltage);
+            Serial.print(" ");
+            Serial.println(lowBatteryCount);
+        }
+        if (lowBatteryCount >= 10) {
+            lowBattery();
+        }
     }
 
     if (redFlashTimer == 0) {
@@ -70,19 +81,12 @@ float voltageMeasurement()
     const float maxVolts = Vref * (R1 + R2) / R2;
     float analogAverage = 0;
 
-    delay(10); // let voltage stabilize for a moment
+    //delay(10); // let voltage stabilize for a moment
 
     for (int i = 0; i < 4; i++) {
         analogAverage += analogRead(BATTIN);
     }
     analogAverage /= 4;
 
-    //int read = analogRead(BATTIN);
-    //Serial.println(read);
-
-    float analogVoltage = analogAverage * (maxVolts / 1024);
-
-    Serial.println(analogVoltage);
-
-    return analogVoltage;
+    return analogAverage * (maxVolts / 1024);
 }
