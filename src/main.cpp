@@ -8,9 +8,11 @@ const float R1 = 99400;
 const float R2 = 5520;
 const float Vref = 1.135; // fine tune the so 7.2 battery voltage matches
 
-#define BATTERY_MAX 8.4
-//#define BATTERY_MIN 6.0
-#define BATTERY_MIN 7.0
+#define BATTERY_COUNT 2
+#define BATTERY_MAX 4.2
+#define BATTERY_MIN 3.0
+#define VOLTAGE_MAX BATTERY_MAX * BATTERY_COUNT
+#define VOLTAGE_MIN BATTERY_MIN * BATTERY_COUNT
 
 bool nonBlockDelay(unsigned long* last, unsigned int delay);
 float voltageMeasurement(void);
@@ -39,15 +41,16 @@ void loop()
 
     if (nonBlockDelay(&lastBatt, 1000)) {
         float batteryVoltage = voltageMeasurement();
-        //Serial.println(batteryVoltage);
 
-        if (batteryVoltage < BATTERY_MIN) {
+        if (batteryVoltage < VOLTAGE_MIN) {
             lowBatteryCount++;
+            Serial.print("Low Battery ");
             Serial.print(batteryVoltage);
-            Serial.print(" ");
+            Serial.print("v, count: ");
             Serial.println(lowBatteryCount);
         }
         if (lowBatteryCount >= 10) {
+            Serial.println("Low Battery Shutdown");
             lowBattery();
         }
     }
