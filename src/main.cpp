@@ -4,57 +4,61 @@
 
 bool nonBlockDelay(unsigned long* last, unsigned int delay);
 float voltageMeasurement(void);
+void batteryLoop(void);
 
 void setup()
 {
     pinMode(IRSENSOR, INPUT);
-    pinMode(BATTIN, INPUT);
-    digitalWrite(BATTIN, LOW);
 
+    pinMode(BATTIN, INPUT);
+    digitalWrite(BATTIN, LOW); // make sure no pullup
     analogReference(INTERNAL); // 1.1 volts
+
     Serial.begin(115200);
     pacificaSetup();
 }
 
 unsigned long lastBlink = 0;
-unsigned long lastBatt = 0;
+
 void loop()
 {
-    static int beamCount;
-    static int lowBatteryCount;
+    static unsigned long lastHand;
     int mode = GREEN;
-    //if (nonBlockDelay(&lastBlink, 5000)) {
-    //mode = REDFLASH;
-    //}
 
+    if (!digitalRead(IRSENSOR)) {
+        if (nonBlockDelay(&lastHand, 5000)) {
+            Serial.print("hand detected ");
+            Serial.println(millis());
+            //mode = REDFLASH;
+        }
+    }
+
+    pacificaLoop(mode);
+    batteryLoop();
+}
+
+void batteryLoop(void)
+{
+    static int lowBatteryCount;
+    static unsigned long lastBatt;
     if (nonBlockDelay(&lastBatt, 1000)) {
         float batteryVoltage = voltageMeasurement();
 
         if (batteryVoltage < VOLTAGE_MIN) {
             lowBatteryCount++;
             Serial.print("Low Battery ");
-            Serial.print(batteryVoltage);
+            Serial.println(batteryVoltage);
             Serial.print("v, count: ");
             Serial.println(lowBatteryCount);
+        } else {
+            Serial.print("Battery: ");
+            Serial.println(batteryVoltage);
         }
         if (lowBatteryCount >= 10) {
             Serial.println("Low Battery Shutdown");
-            lowBattery();
+            fastLEDLowBattery();
         }
     }
-
-    if (redFlashTimer == 0) {
-        if (!digitalRead(IRSENSOR)) {
-            //beamCount += 2;
-            if (beamCount > 100) {
-                mode = REDFLASH;
-            }
-        }
-        if (beamCount > 0)
-            beamCount--;
-    }
-
-    pacificaLoop(mode);
 }
 
 bool nonBlockDelay(unsigned long* last, unsigned int delay)
@@ -67,7 +71,17 @@ bool nonBlockDelay(unsigned long* last, unsigned int delay)
     return false;
 }
 
-float voltageMeasurement()
+/*int redFlashLoop(int flag)
+{
+    static int mode;
+    if (flag == STATUS) {
+        return mode;
+    }
+
+    return 0;
+}*/
+
+float voltageMeasurement(void)
 {
     const float maxVolts = Vref * (R1 + R2) / R2;
     float analogAverage = 0;
