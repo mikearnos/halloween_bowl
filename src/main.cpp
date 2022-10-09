@@ -11,7 +11,6 @@ void setup()
     pinMode(IRSENSOR, INPUT);
 
     pinMode(BATTIN, INPUT);
-    digitalWrite(BATTIN, LOW); // make sure no pullup
     analogReference(INTERNAL); // 1.1 volts
 
     Serial.begin(115200);
