@@ -4,6 +4,8 @@
 //  December 2019, Mark Kriegsman and Mary Corey March.
 //  For Dan.
 //
+//  Edited by Mike Arnos for my Halloween project.
+//  Thanks Mark and Mary!
 
 #define FASTLED_ALLOW_INTERRUPTS 0
 #include <FastLED.h>
