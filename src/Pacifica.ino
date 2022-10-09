@@ -23,14 +23,11 @@ CRGB leds[NUM_LEDS];
 
 int redFlashTimer;
 
-void lowBattery(void)
+void fastLEDLowBattery(void)
 {
-    for (uint16_t i = 0; i < NUM_LEDS; i++) {
-        leds[i] = 0;
-        leds[i].red = 1;
-    }
+    fill_solid(leds, NUM_LEDS, CRGB(1, 0, 0));
     FastLED.show();
-    while(1);
+    while (1) { };
 }
 
 void pacificaSetup()
@@ -40,15 +37,16 @@ void pacificaSetup()
         .setCorrection(TypicalLEDStrip);
     FastLED.setMaxPowerInVoltsAndMilliamps(5, MAX_POWER_MILLIAMPS);
 
-    for (uint16_t i = 0; i < NUM_LEDS; i++) {
-        leds[i] = 0;
-    }
+    FastLED.clear();
     FastLED.show();
     delay(200);
 }
 
+extern float voltageMeasurement(void);
+
 void pacificaLoop(int mode)
 {
+    static int voltageCounter;
     //static int redFlashTimer;
 
     if (redFlashTimer == 0) {
@@ -73,10 +71,7 @@ void pacificaLoop(int mode)
 
 void redFlash(uint8_t value)
 {
-    for (uint16_t i = 0; i < NUM_LEDS; i++) {
-        leds[i] = 0;
-        leds[i].red = value;
-    }
+    fill_solid(leds, NUM_LEDS, CRGB(value, 0, 0));
     FastLED.show();
 }
 
