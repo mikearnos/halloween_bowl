@@ -1,5 +1,11 @@
-#define IRSENSOR PD2
-#define BATTIN A0
+#define IRSENSOR PD5
+#define BATTIN A1
+
+#define SND_BARREL 1
+#define SND_PIPE 2
+
+#define DFTX 3
+#define DFRX 2
 
 const float R1 = 99400;
 const float R2 = 5520;
