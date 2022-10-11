@@ -11,13 +11,19 @@
 #include <FastLED.h>
 FASTLED_USING_NAMESPACE
 
-#define DATA_PIN 3
+#define DATA_PIN 4
 #define NUM_LEDS 60
 #define MAX_POWER_MILLIAMPS 300
 #define LED_TYPE WS2812B
 #define COLOR_ORDER GRB
 
 #include "pacifica.h"
+
+void pacifica_loop(void);
+void redFlash(uint8_t);
+void pacifica_one_layer(CRGBPalette16&, uint16_t, uint16_t, uint8_t, uint16_t);
+void pacifica_add_whitecaps(void);
+void pacifica_deepen_colors(void);
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -45,15 +51,16 @@ void pacificaSetup()
 }
 
 extern float voltageMeasurement(void);
+extern void servoLoop(void);
 
 void pacificaLoop(int mode)
 {
-    static int voltageCounter;
+    //static int voltageCounter;
     //static int redFlashTimer;
 
     if (redFlashTimer == 0) {
         if (mode == GREEN) {
-            EVERY_N_MILLISECONDS(20)
+            EVERY_N_MILLISECONDS(10)
             {
                 pacifica_loop();
                 FastLED.show();
