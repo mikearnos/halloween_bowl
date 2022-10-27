@@ -8,12 +8,14 @@ extern void dfSetup(void);
 extern uint16_t dfPlay(int);
 bool detectHand(void);
 
+int isPlaying = 0;
+volatile int trigger = 0;
+volatile unsigned long prevISR = 0;
+void triggerISR(void);
+
 void setup()
 {
-    pinMode(IRSENSOR, INPUT);
-
-    pinMode(BATTIN, INPUT);
-    analogReference(INTERNAL); // 1.1 volts, Vref must match for proper calculation
+    batterySetup();
 
     pacificaSetup();
 
@@ -21,37 +23,35 @@ void setup()
 
     dfSetup();
     dfPlay(SND_CAPCOM);
+
+    pinMode(TRIGGER, INPUT_PULLUP);
+    attachInterrupt(digitalPinToInterrupt(TRIGGER), triggerISR, FALLING);
 }
 
-#define NOHAND 0
-#define TRIGGERED 1
-#define RUNNING 2
+volatile unsigned long lastISR = -1;
+volatile unsigned long lastMillis = -1;
+void triggerISR(void)
+{
+    unsigned long currentMillis;
+    if ((currentMillis = millis()) - lastMillis >= 500) {
+        lastMillis = currentMillis;
+        if (!isPlaying)
+            trigger = 1;
+    }
+}
 
 void loop()
 {
-    static int processingHand;
-    //static unsigned long lastPlayer;
-    static unsigned long lastTime;
-    //if (nonBlockDelay(&lastPlayer, 10000)) {
-    //DF1201S.playFileNum(SND_BARREL);
-    //}
+    static unsigned long lastPlaying;
+    if (nonBlockDelay(&lastPlaying, 1000)) {
+        if (isPlaying)
+            isPlaying--;
+    }
 
-    if (detectHand()) {
-        if (processingHand == NOHAND) {
-            processingHand = TRIGGERED;
-        }
-        if (processingHand == TRIGGERED) {
-            processingHand = RUNNING;
-            //Serial.println(dfPlay(random(SND_DONT, SND_MY_MAN + 1)));
-            //Serial.println(dfPlay(random(SND_BARREL, SND_MY_MAN + 1)));
-            //Serial.print("hand detected ");
-            //Serial.println(millis());
-        }
-        if (processingHand == RUNNING) {
-            if (nonBlockDelay(&lastTime, 2000)) {
-                processingHand = NOHAND;
-            }
-        }
+    if (trigger) {
+        isPlaying = dfPlay(random(SND_BARREL, SND_MY_MAN + 1));
+        Serial.println(isPlaying);
+        trigger = 0;
     }
 
     int mode = GREEN;
@@ -59,19 +59,6 @@ void loop()
     pacificaLoop(mode);
 
     batteryLoop();
-}
-
-bool detectHand(void)
-{
-    static unsigned long lastHand;
-    if (!digitalRead(IRSENSOR)) {
-        if (nonBlockDelay(&lastHand, 100)) {
-            //Serial.print("hand detected ");
-            //Serial.println(millis());
-            return 1;
-        }
-    }
-    return 0;
 }
 
 bool nonBlockDelay(unsigned long* last, unsigned int delay)
