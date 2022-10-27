@@ -43,18 +43,21 @@ void triggerISR(void)
 void loop()
 {
     static unsigned long lastPlaying;
+    if (trigger) {
+        isPlaying = dfPlay(random(SND_BARREL, SND_MY_MAN + 1));
+        lastPlaying = millis();
+        //Serial.println(isPlaying);
+        trigger = 0;
+    }
     if (nonBlockDelay(&lastPlaying, 1000)) {
         if (isPlaying)
             isPlaying--;
     }
 
-    if (trigger) {
-        isPlaying = dfPlay(random(SND_BARREL, SND_MY_MAN + 1));
-        Serial.println(isPlaying);
-        trigger = 0;
-    }
-
     int mode = GREEN;
+    if (isPlaying){
+        mode = REDFLASH;
+    }
 
     pacificaLoop(mode);
 

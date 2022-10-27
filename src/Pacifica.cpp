@@ -25,6 +25,8 @@ void pacifica_one_layer(CRGBPalette16&, uint16_t, uint16_t, uint8_t, uint16_t);
 void pacifica_add_whitecaps(void);
 void pacifica_deepen_colors(void);
 
+extern bool nonBlockDelay(unsigned long*, unsigned int);
+
 //////////////////////////////////////////////////////////////////////////
 
 CRGB leds[NUM_LEDS];
@@ -57,6 +59,7 @@ void pacificaLoop(int mode)
 {
     //static int voltageCounter;
     //static int redFlashTimer;
+    static unsigned long lastRedFlash;
 
     if (redFlashTimer == 0) {
         if (mode == GREEN) {
@@ -66,13 +69,13 @@ void pacificaLoop(int mode)
                 FastLED.show();
             }
         } else if (mode == REDFLASH) {
-            redFlashTimer = 3;
+            redFlashTimer = 2;
         }
     }
     if (redFlashTimer) {
-        EVERY_N_MILLISECONDS(100)
+        if (nonBlockDelay(&lastRedFlash, 200))
         {
-            redFlash(255 * (redFlashTimer & 1));
+            redFlash(180 * ((redFlashTimer + 1) & 1));
             redFlashTimer--;
         }
     }
