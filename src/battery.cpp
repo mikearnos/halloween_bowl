@@ -2,8 +2,6 @@
 #include "hardware.h"
 #include "battery.h"
 
-extern bool nonBlockDelay(unsigned long*, unsigned int);
-
 void batterySetup(void)
 {
     pinMode(BATTIN, INPUT);
@@ -39,7 +37,7 @@ void batteryLoop(void)
     }
     if (lowBatteryCount >= 10) {
         Serial.println("Low Battery Shutdown");
-        //fastLEDLowBattery();
+        fastLEDLowBattery();
     }
 }
 
