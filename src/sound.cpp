@@ -28,11 +28,14 @@ void dfSetup(void)
 
     Serial.print("PlayMode:");
     Serial.println(DF1201S.getPlayMode());
-
-    DF1201S.playFileNum(SND_BARREL);
 }
 
-void dfPlay(int fileID)
+uint16_t dfPlay(int fileID)
 {
     DF1201S.playFileNum(fileID);
+    uint16_t totalTime = DF1201S.getTotalTime();
+    if (totalTime == 0)
+        return 1;
+
+    return totalTime;
 }
