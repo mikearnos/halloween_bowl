@@ -34,8 +34,8 @@ uint16_t dfPlay(int fileID)
 {
     DF1201S.playFileNum(fileID);
     uint16_t totalTime = DF1201S.getTotalTime();
-    if (totalTime == 0)
-        return 1;
+    //if (totalTime == 0)
+    //    return 1;
 
-    return totalTime;
+    return totalTime + 1;
 }
