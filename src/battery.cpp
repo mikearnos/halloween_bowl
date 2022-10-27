@@ -4,6 +4,12 @@
 
 extern bool nonBlockDelay(unsigned long*, unsigned int);
 
+void batterySetup(void)
+{
+    pinMode(BATTIN, INPUT);
+    analogReference(INTERNAL); // 1.1 volts, Vref must match for proper calculation
+}
+
 void batteryLoop(void)
 {
     static unsigned long lastBatt;
