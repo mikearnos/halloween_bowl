@@ -1,18 +1,18 @@
 #include <arduino.h>
 #include "hardware.h"
+#include "battery.h"
 
 extern bool nonBlockDelay(unsigned long*, unsigned int);
-float voltageMeasurement(void);
 
 void batteryLoop(void)
 {
     static unsigned long lastBatt;
+    static int lowBatteryCount;
+
     if (!nonBlockDelay(&lastBatt, 1000)) {
         return;
     }
-    static int lowBatteryCount;
-    //static unsigned long lastBatt;
-    //if (nonBlockDelay(&lastBatt, 1000)) {
+
     float batteryVoltage = voltageMeasurement();
 
     if (batteryVoltage == 0) {
