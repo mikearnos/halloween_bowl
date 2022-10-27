@@ -57,8 +57,6 @@ extern void servoLoop(void);
 
 void pacificaLoop(int mode)
 {
-    //static int voltageCounter;
-    //static int redFlashTimer;
     static unsigned long lastRedFlash;
 
     if (redFlashTimer == 0) {
