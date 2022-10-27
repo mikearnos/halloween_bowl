@@ -1,7 +1,7 @@
-#define DFRX 2
-#define DFTX 3
+#define DFRX PD5
+#define DFTX PD6
 //#define DATA_PIN 4  in pacifica.cpp
-#define IRSENSOR PD5
+#define TRIGGER PD2
 #define BATTIN A1
 
 #define SND_BARREL 1
