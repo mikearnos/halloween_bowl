@@ -1,8 +1,9 @@
+#define BATTIN A1
+#define TRIGGER PD2
+//#define TRIGGER2 PD3 reserved
+//#define DATA_PIN 4  in pacifica.cpp
 #define DFRX PD5
 #define DFTX PD6
-//#define DATA_PIN 4  in pacifica.cpp
-#define TRIGGER PD2
-#define BATTIN A1
 
 #define SND_BARREL 1
 #define SND_PIPE 2
