@@ -1,14 +1,12 @@
 #include <arduino.h>
 #include "pacifica.h"
 #include "hardware.h"
+#include "battery.h"
 
 bool nonBlockDelay(unsigned long* last, unsigned int delay);
-float voltageMeasurement(void);
-void batteryLoop(void);
 extern void dfSetup(void);
-extern void dfPlay(int);
+extern uint16_t dfPlay(int);
 bool detectHand(void);
-extern void checkTime(void);
 
 void setup()
 {
@@ -22,7 +20,7 @@ void setup()
     Serial.begin(115200);
 
     dfSetup();
-    //dfPlay(SND_BARREL);
+    dfPlay(SND_CAPCOM);
 }
 
 #define NOHAND 0
@@ -44,7 +42,8 @@ void loop()
         }
         if (processingHand == TRIGGERED) {
             processingHand = RUNNING;
-            //dfPlay(random(SND_DONT, SND_MY_MAN + 1));
+            //Serial.println(dfPlay(random(SND_DONT, SND_MY_MAN + 1)));
+            //Serial.println(dfPlay(random(SND_BARREL, SND_MY_MAN + 1)));
             //Serial.print("hand detected ");
             //Serial.println(millis());
         }
