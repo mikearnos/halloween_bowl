@@ -1,6 +1,7 @@
 #include <DFRobot_DF1201S.h>
 #include <SoftwareSerial.h>
 #include "hardware.h"
+#include "pacifica.h"
 
 SoftwareSerial DF1201SSerial(DFRX, DFTX); //RX  TX
 DFRobot_DF1201S DF1201S;
@@ -8,10 +9,18 @@ DFRobot_DF1201S DF1201S;
 void dfSetup(void)
 {
     DF1201SSerial.begin(9600);
-    while (!DF1201S.begin(DF1201SSerial)) {
-        Serial.print("Init failed, please check the wire connection! ");
-        Serial.println(millis());
-        delay(10);
+
+    for (int i = 5; !DF1201S.begin(DF1201SSerial) && i; i--) {
+        if (i == 1) {
+            Serial.println("DF1201S init failed, please check the wire connection!");
+            for (int i = 0; i < 3; i++) {
+                purpleFlash(255);
+                delay(200);
+                purpleFlash(0);
+                delay(200);
+            }
+            return;
+        }
     }
 
     // need to power cycle module after these are changed
@@ -37,6 +46,5 @@ uint16_t dfPlay(int fileID)
     if (totalTime == 0)
         return 1;
 
-    //return totalTime + 1;
     return totalTime;
 }
