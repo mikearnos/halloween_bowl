@@ -73,13 +73,3 @@ bool nonBlockDelay(unsigned long* last, unsigned int delay)
     }
     return false;
 }
-
-/*int redFlashLoop(int flag)
-{
-    static int mode;
-    if (flag == STATUS) {
-        return mode;
-    }
-
-    return 0;
-}*/
