@@ -18,6 +18,7 @@ FASTLED_USING_NAMESPACE
 #define COLOR_ORDER GRB
 
 #include "pacifica.h"
+#include "battery.h"
 
 void pacifica_loop(void);
 void redFlash(uint8_t);
@@ -47,13 +48,11 @@ void pacificaSetup()
         .setCorrection(TypicalLEDStrip);
     FastLED.setMaxPowerInVoltsAndMilliamps(5, MAX_POWER_MILLIAMPS);
 
-    FastLED.clear();
+    redFlash(50);
+    //FastLED.clear();
     FastLED.show();
-    delay(200);
+    //delay(200);
 }
-
-extern float voltageMeasurement(void);
-extern void servoLoop(void);
 
 void pacificaLoop(int mode)
 {
@@ -71,8 +70,7 @@ void pacificaLoop(int mode)
         }
     }
     if (redFlashTimer) {
-        if (nonBlockDelay(&lastRedFlash, 200))
-        {
+        if (nonBlockDelay(&lastRedFlash, 200)) {
             redFlash(180 * ((redFlashTimer + 1) & 1));
             redFlashTimer--;
         }
@@ -82,6 +80,12 @@ void pacificaLoop(int mode)
 void redFlash(uint8_t value)
 {
     fill_solid(leds, NUM_LEDS, CRGB(value, 0, 0));
+    FastLED.show();
+}
+
+void purpleFlash(uint8_t value)
+{
+    fill_solid(leds, NUM_LEDS, CRGB(value, 0, value));
     FastLED.show();
 }
 
