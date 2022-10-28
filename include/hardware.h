@@ -1,4 +1,4 @@
-#define BATTIN A1
+#define BATTIN A0
 #define TRIGGER PD2
 //#define TRIGGER2 PD3 reserved
 //#define DATA_PIN 4  in pacifica.cpp
@@ -14,7 +14,8 @@
 
 const float R1 = 99400;
 const float R2 = 14720;
-const float Vref = 1.135; // the voltage measured on AREF
+//const float Vref = 1.135; // the voltage measured on AREF
+const float Vref = 1.095; // the voltage measured on AREF
 
 #define BATTERY_COUNT 2
 #define BATTERY_MAX 4.2
