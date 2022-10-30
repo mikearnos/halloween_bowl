@@ -8,7 +8,7 @@ extern void dfSetup(void);
 extern uint16_t dfPlay(int);
 bool detectHand(void);
 
-int isPlaying = 0;
+int isPlaying = 1;
 volatile int trigger = 0;
 volatile unsigned long prevISR = 0;
 void triggerISR(void);
@@ -22,14 +22,15 @@ void setup()
     Serial.begin(115200);
 
     dfSetup();
-    dfPlay(SND_CAPCOM);
+    dfPlay(1); // play first mp3 as startup sound
 
-    pinMode(TRIGGER, INPUT_PULLUP);
+    pinMode(COMMS1, INPUT_PULLUP); // trigger
+    pinMode(COMMS2, INPUT_PULLUP); // armed
     attachInterrupt(digitalPinToInterrupt(TRIGGER), triggerISR, FALLING);
 }
 
-volatile unsigned long lastISR = -1;
-volatile unsigned long lastMillis = -1;
+unsigned long lastISR = -1;
+unsigned long lastMillis = -1;
 void triggerISR(void)
 {
     unsigned long currentMillis;
@@ -44,7 +45,7 @@ void loop()
 {
     static unsigned long lastPlaying;
     if (trigger) {
-        isPlaying = dfPlay(random(SND_BARREL, SND_MY_MAN + 1));
+        isPlaying = dfPlay(random(2, totalFiles));
         lastPlaying = millis();
         //Serial.println(isPlaying);
         trigger = 0;
@@ -55,7 +56,7 @@ void loop()
     }
 
     int mode = GREEN;
-    if (isPlaying){
+    if (isPlaying) {
         mode = REDFLASH;
     }
 
