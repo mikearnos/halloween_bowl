@@ -44,10 +44,14 @@ void triggerISR(void)
 void loop()
 {
     static unsigned long lastPlaying;
+    static int currentSound;
     if (trigger) {
-        isPlaying = dfPlay(random(2, totalFiles));
+        if (currentSound <2 || currentSound > totalFiles){
+            currentSound = 2;
+        }
+        //isPlaying = dfPlay(random(2, totalFiles));
+        isPlaying = dfPlay(currentSound++);
         lastPlaying = millis();
-        //Serial.println(isPlaying);
         trigger = 0;
     }
     if (nonBlockDelay(&lastPlaying, 1000)) {
