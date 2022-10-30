@@ -9,3 +9,4 @@ extern void pacificaSetup(void);
 extern void pacificaLoop(int);
 
 extern int redFlashTimer;
+extern int totalFiles;
