@@ -6,6 +6,8 @@
 SoftwareSerial DF1201SSerial(DFRX, DFTX); //RX  TX
 DFRobot_DF1201S DF1201S;
 
+int totalFiles;
+
 void dfSetup(void)
 {
     DF1201SSerial.begin(9600);
@@ -29,14 +31,18 @@ void dfSetup(void)
     //DF1201S.setPrompt(false);
 
     DF1201S.setVol(20);
-    Serial.print("VOL:");
-    Serial.println(DF1201S.getVol());
+    //Serial.print("VOL:");
+    //Serial.println(DF1201S.getVol());
 
     DF1201S.switchFunction(DF1201S.MUSIC);
     DF1201S.setPlayMode(DF1201S.SINGLE);
 
-    Serial.print("PlayMode:");
-    Serial.println(DF1201S.getPlayMode());
+    //Serial.print("PlayMode:");
+    //Serial.println(DF1201S.getPlayMode());
+
+    totalFiles = DF1201S.getTotalFile();
+    Serial.print("TotalFiles: ");
+    Serial.println(totalFiles);
 }
 
 uint16_t dfPlay(int fileID)
