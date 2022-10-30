@@ -30,14 +30,14 @@ void dfSetup(void)
     //DF1201A.setLED(off)
     //DF1201S.setPrompt(false);
 
-    DF1201S.setVol(20);
-    //Serial.print("VOL:");
-    //Serial.println(DF1201S.getVol());
+    DF1201S.setVol(25);
+    Serial.print("VOL: ");
+    Serial.println(DF1201S.getVol());
 
     DF1201S.switchFunction(DF1201S.MUSIC);
     DF1201S.setPlayMode(DF1201S.SINGLE);
 
-    //Serial.print("PlayMode:");
+    //Serial.print("PlayMode: ");
     //Serial.println(DF1201S.getPlayMode());
 
     totalFiles = DF1201S.getTotalFile();
