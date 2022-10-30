@@ -12,15 +12,17 @@
 FASTLED_USING_NAMESPACE
 
 #define DATA_PIN 4
-#define NUM_LEDS 60
+#define NUM_LEDS 53
 #define MAX_POWER_MILLIAMPS 300
 #define LED_TYPE WS2812B
 #define COLOR_ORDER GRB
 
 #include "pacifica.h"
 #include "battery.h"
+#include "hardware.h"
 
 void pacifica_loop(void);
+void armed_loop(void);
 void redFlash(uint8_t);
 void pacifica_one_layer(CRGBPalette16&, uint16_t, uint16_t, uint8_t, uint16_t);
 void pacifica_add_whitecaps(void);
@@ -63,6 +65,7 @@ void pacificaLoop(int mode)
             EVERY_N_MILLISECONDS(10)
             {
                 pacifica_loop();
+                armed_loop();
                 FastLED.show();
             }
         } else if (mode == REDFLASH) {
@@ -73,6 +76,19 @@ void pacificaLoop(int mode)
         if (nonBlockDelay(&lastRedFlash, 200)) {
             redFlash(180 * ((redFlashTimer + 1) & 1));
             redFlashTimer--;
+        }
+    }
+}
+
+void armed_loop()
+{
+    static unsigned long lastArmed;
+    if (!digitalRead(ARMED)) {
+        leds[13] = CRGB(0, 0, 0);
+        leds[14] = CRGB(0, 0, 0);
+        if (nonBlockDelay(&lastArmed, 200)) {
+            leds[13] = CRGB(100, 0, 0);
+            leds[14] = CRGB(100, 0, 0);
         }
     }
 }
