@@ -22,7 +22,7 @@ void setup()
     Serial.begin(115200);
 
     dfSetup();
-    dfPlay(1); // play first mp3 as startup sound
+    dfPlay(SND_CAPCOM); // play first mp3 as startup sound
 
     pinMode(COMMS1, INPUT_PULLUP); // trigger
     pinMode(COMMS2, INPUT_PULLUP); // armed

@@ -8,12 +8,7 @@
 #define TRIGGER COMMS1
 #define ARMED COMMS2
 
-#define SND_BARREL 1
-#define SND_PIPE 2
-#define SND_CAPCOM 3
-#define SND_DONT 4
-#define SND_TURN_OFF 5
-#define SND_MY_MAN 6
+#define SND_CAPCOM 1
 
 const float R1 = 99400;
 const float R2 = 14720;
